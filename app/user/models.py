@@ -6,10 +6,10 @@ from flask_login import UserMixin, login_user, logout_user
 from sqlalchemy import desc
 
 from .. import db, login_manager, bcrypt
-from ..core.models import BaseMixin
+from ..core.models import PkModel
 
 
-class UserAccount(BaseMixin, UserMixin, db.Model):
+class UserAccount(PkModel, UserMixin):
     __tablename__ = "Users"
 
     email = db.Column(db.String(100), nullable=False, unique=True)

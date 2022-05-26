@@ -1,7 +1,6 @@
 import enum
-from re import A
 from .. import db
-from ..core.models import BaseMixin
+from ..core.models import Model, Column, ForeignKey, PkModel, relationship
 
 
 class Gender(enum.Enum):
@@ -16,16 +15,15 @@ class SchoolLevel(enum.Enum):
     UNIVERSITARY = "universitary"
 
 
-class Employee(BaseMixin, db.Model):
+class Employee(PkModel):
     __tablename__ = "Employee"
 
-    id = db.Column(db.Integer, primary_key=True)
-    phone = db.Column(db.String)
-    name = db.Column(db.String(250), nullable=False)
-    gender = db.Column(db.Enum(Gender), nullable=False)
-    school_level = db.Column(db.Enum(SchoolLevel), nullable=False)
-    laboral_experience = db.Column(db.SmallInteger, nullable=False, default=0)
-    address = db.Column(db.String(500))
+    phone = Column(db.String)
+    name = Column(db.String(250), nullable=False)
+    gender = Column(db.Enum(Gender), nullable=False)
+    school_level = Column(db.Enum(SchoolLevel), nullable=False)
+    laboral_experience = Column(db.SmallInteger, nullable=False, default=0)
+    address = Column(db.String(500))
 
 
 class DriverType(enum.Enum):
@@ -33,12 +31,12 @@ class DriverType(enum.Enum):
     B = 1
 
 
-class Driver(BaseMixin, db.Model):
+class Driver(Model):
     __tablename__ = "Driver"
 
-    employee_id = db.Column(db.Integer, db.ForeignKey("Employee.id"))
-    driver_type = db.Column(db.Enum(DriverType))
-    evaluation = db.Column(db.SmallInteger, nullable=False, default=0)
-    
+    employee_id = Column(db.Integer, ForeignKey("Employee.id"), primary_key=True)
+    driver_type = Column(db.Enum(DriverType))
+    evaluation = Column(db.SmallInteger, nullable=False, default=0)
+
     # Relation fields
-    employee = db.relationship("Employee")
+    employee = relationship("Employee")

@@ -30,19 +30,14 @@ def login():
             func.lower(UserAccount.email) == func.lower(form.email.data)
         ).first()
         if user:
-            if user.is_blocked:
-                flash(
-                    f"Your account has been blocked. Reason: {user.block_reason.value}",
-                    "danger",
-                )
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                user.login(form.remember_me.data)
+                flash("You have been logged in!", "success")
+                return redirect(url_for("user.profile"))
             else:
-                if bcrypt.check_password_hash(user.password, form.password.data):
-                    user.login(form.remember_me.data)
-                    flash("You have been logged in!", "success")
-                    return redirect(url_for("user.profile"))
-                else:
-                    user.reg_login_failure()
-                    flash("Invalid Credentials", "danger")
+                user.reg_login_failure()
+                flash("Invalid Credentials", "danger")
+
     return render_template("auth/login.html", form=form)
 
 

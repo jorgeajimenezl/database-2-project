@@ -1,4 +1,3 @@
-from textwrap import wrap
 from flask import (
     Blueprint,
     current_app,

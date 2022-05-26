@@ -32,4 +32,8 @@ def create_app():
 
     app.cli.add_command(user_cli)
 
+    from .data import data_bp
+
+    app.register_blueprint(data_bp)
+
     return app
