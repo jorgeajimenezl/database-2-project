@@ -3,7 +3,7 @@
 {% with user=user %}
     {% include 'user/_header.html' %}
 {% endwith %}
-<!-- <div class="row justify-content-center">
+<div class="row justify-content-center">
     <div class="col-11 border rounded bg-white">
         <div class="row border-bottom py-2">
             <div class="col-12">
@@ -20,7 +20,7 @@
                 date
             </div>
         </div>
-        {% if login_records.items %}
+        <!-- {% if login_records.items %}
             {% for record in login_records.items %}
                 <div class="row border-bottom align-items-center py-2">
                     <div class="col-3 text-truncate">
@@ -42,14 +42,14 @@
                 <span class="text-secondary">None</span>
             </div>
         </div>
-        {% endif %}
+        {% endif %} -->
         <div class="row rounded-bottom">
             <div class="col-12">
-                {% with obj=login_records, route='user.profile', extra_kwargs=dict(**request.args) %}
+                <!-- {% with obj=login_records, route='user.profile', extra_kwargs=dict(**request.args) %}
                     {% include 'core/components/pagination.html' %}
-                {% endwith %}
+                {% endwith %} -->
             </div>
         </div>
     </div>
-</div> -->
+</div>
 {% endblock %}

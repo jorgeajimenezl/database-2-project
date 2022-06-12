@@ -9,6 +9,7 @@ from flask import (
 from flask_mail import Message
 from flask_login import (
     current_user,
+    login_user,
 )
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -31,7 +32,7 @@ def login():
         ).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
-                user.login(form.remember_me.data)
+                login_user(user, form.remember_me.data)
                 flash("You have been logged in!", "success")
                 return redirect(url_for("user.profile"))
             else:

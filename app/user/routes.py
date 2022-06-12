@@ -15,9 +15,9 @@ def profile():
     #     .filter_by(user_id=current_user.id)\
     #     .order_by(desc(UserAccountLog.timestamp))\
     #     .paginate(request.args.get('page', 1, type=int), 25)
-    # return render_template('user/profile.html', user=current_user,
-    #     login_records=login_records)
-    return "Mirón, no mires aquí"
+    return render_template('user/profile.html', user=current_user, login_records=None)
+        # login_records=login_records)
+    # return "Mirón, no mires aquí"
 
 
 @user_bp.route("/profile/not-verified", methods=["GET", "POST"])
