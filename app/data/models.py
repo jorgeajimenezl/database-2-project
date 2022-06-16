@@ -6,15 +6,15 @@ from ..core.models import Model, Column, ForeignKey, PkModel, relationship
 
 
 class Gender(enum.Enum):
-    MALE = "male"
-    FEMALE = "female"
+    MALE = 1
+    FEMALE = 2
 
 
 class SchoolLevel(enum.Enum):
-    PRIMARY = "primary"
-    SECUNDARY = "secundary"
-    PRE_UNIVERSITARY = "preuniversitary"
-    UNIVERSITARY = "universitary"
+    PRIMARY = 1
+    SECUNDARY = 2
+    PRE_UNIVERSITARY = 3
+    UNIVERSITARY = 4
 
 
 class Employee(PkModel):
