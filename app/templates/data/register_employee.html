@@ -1,95 +1,68 @@
 {% extends 'core/layout.html' %}
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        {% with title="Register employee" %}
-            {% include 'data/_header.html' %}
-        {% endwith %}
-        <div class="row justify-content-center">
-            <div class="col-11 col-md-6 col-lg-4">
-                <div class="row">
-                    <div class="col-12 border rounded bg-white p-3">
-                        <form method="POST">
-                            {{ form.csrf_token }}
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.name %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.phone %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.gender %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.address %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.school_level %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.laboral_experience %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    {% with field=form.employee_type %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3" id="driver_type_container">
-                                <div class="col-12">
-                                    {% with field=form.driver_type %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3" id="driver_evaluation_container">
-                                <div class="col-12">
-                                    {% with field=form.driver_evaluation %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row mb-3" id="administrative_position_container" style="display: none;">
-                                <div class="col-12">
-                                    {% with field=form.administrative_position %}
-                                        {% include 'core/components/inputs/floating_label.html' %}
-                                    {% endwith %}
-                                </div>
-                            </div>
-                            <div class="row justify-content-center border-top g-0 pt-3">
-                                <div class="col-auto">
-                                    <button class="btn btn-primary">Register</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+
+{% with title="Register employee" %}
+{% include 'data/_header.html' %}
+{% endwith %}
+<div class="row justify-content-center">
+    <div class="col-11 col-md-6 col-lg-4">
+        <div class="col-12 border rounded bg-white p-3">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="col-12 mb-3">
+                    {% with field=form.name %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
                 </div>
-            </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.phone %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.gender %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.address %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.school_level %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.laboral_experience %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.employee_type %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3" id="driver_type_container">
+                    {% with field=form.driver_type %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3" id="driver_evaluation_container">
+                    {% with field=form.driver_evaluation %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3" id="administrative_position_container" style="display: none;">
+                    {% with field=form.administrative_position %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="row col-12 justify-content-center border-top g-0 pt-3">
+                    <button class="btn btn-primary">Register</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -119,6 +92,6 @@
         };
         $("#employee_type").change(onEmployeeTypeChange);
         onEmployeeTypeChange();
-    }); 
+    });
 </script>
 {% endblock %}

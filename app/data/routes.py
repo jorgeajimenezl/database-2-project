@@ -1,4 +1,5 @@
 import re
+from typing import List
 from flask import flash, render_template
 
 from .forms import EmployeeForm, TruckForm
@@ -10,17 +11,21 @@ from . import data_bp
 @data_bp.route("/register_truck", methods=["GET", "POST"])
 def register_truck():
     form = TruckForm()
-    drivers = Driver.query.all()
-    form.driver.choices = {x.employee.name: x.employee_id for x in drivers}
+    drivers: List[Driver] = Driver.query.all()
+    form.driver.choices = [x.employee.name for x in drivers]
 
     if form.validate_on_submit():
-        employee = Employee.get_by_id(form.driver.data)
-        if employee:
+        index = -1
+        for i in drivers:
+            if i.employee.name == form.model.data:
+                index = i.employee_id
+
+        if index != -1:
             Truck.create(
                 weight=float(form.weight.data),
                 model=form.model.data,
                 fuel_type=form.model.data,
-                driver_id=form.driver.data,
+                driver_id=index,
             )
             flash("Truck registration successfull!!", "success")
         elif form.is_submitted():
@@ -36,10 +41,12 @@ def register_employee():
     if form.validate_on_submit():
         # Normalize phone number
         phone = re.match("\+?(53)? *(5\d{7})", form.phone.data)
+        # Normalize name
+        name = str.join(" ", map(str.capitalize, form.name.data.split()))
 
         e = Employee.create(
             phone=f"+53 {phone[2]}",
-            name=form.name.data,
+            name=name,
             gender=Gender[form.gender.data.replace(" ", "_").upper()],
             school_level=SchoolLevel[form.school_level.data.replace(" ", "_").upper()],
             laboral_experience=form.laboral_experience.data,

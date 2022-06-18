@@ -1,6 +1,5 @@
 import enum
 
-from sqlalchemy import nullslast
 from .. import db
 from ..core.models import Model, Column, ForeignKey, PkModel, relationship
 
@@ -21,7 +20,7 @@ class Employee(PkModel):
     __tablename__ = "Employee"
 
     phone = Column(db.String(20))
-    name = Column(db.String(250), nullable=False)
+    name = Column(db.String(250), nullable=False, unique=True)
     gender = Column(db.Enum(Gender), nullable=False)
     school_level = Column(db.Enum(SchoolLevel), nullable=False)
     laboral_experience = Column(db.SmallInteger, nullable=False, default=0)
