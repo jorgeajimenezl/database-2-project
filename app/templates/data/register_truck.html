@@ -29,6 +29,41 @@
                         {% include 'core/components/inputs/floating_label.html' %}
                         {% endwith %}
                     </div>
+                    <div class="col-12 mb-3">
+                        {% with field=form.truck_type %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3" id="max_speed_container">
+                        {% with field=form.max_speed %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3" id="max_load_container">
+                        {% with field=form.max_load %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3" id="spend_by_kilometer_container" style="display: none;">
+                        {% with field=form.spend_by_kilometer %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3" id="length_container" style="display: none;">
+                        {% with field=form.length %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3" id="width_container" style="display: none;">
+                        {% with field=form.width %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3" id="height_container" style="display: none;">
+                        {% with field=form.height %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
                     <div class="row col-12 justify-content-center border-top g-0 pt-3">
                         <button class="btn btn-primary">Register</button>
                     </div>
@@ -37,4 +72,29 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        const onTruckTypeChange = (x) => {
+            const value = $("#truck_type").val();
+            if (value == "Lightweight") {
+                $("#max_speed_container").show();
+                $("#max_load_container").show();
+                $("#spend_by_kilometer").hide();
+                $("#length_container").hide();
+                $("#width_container").hide();
+                $("#height_container").hide();
+            } else {
+                $("#max_speed_container").hide();
+                $("#max_load_container").hide();
+                $("#spend_by_kilometer").show();
+                $("#length_container").show();
+                $("#width_container").show();
+                $("#height_container").show();
+            }
+        };
+        $("#truck_type").change(onTruckTypeChange);
+        onTruckTypeChange();
+    });
+</script>
 {% endblock %}

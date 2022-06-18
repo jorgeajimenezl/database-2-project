@@ -6,7 +6,13 @@ from wtforms import (
     SelectField,
     IntegerField,
 )
-from wtforms.validators import DataRequired, EqualTo, NumberRange, Regexp, StopValidation
+from wtforms.validators import (
+    DataRequired,
+    EqualTo,
+    NumberRange,
+    Regexp,
+    StopValidation,
+)
 
 # import phonenumbers
 
@@ -22,7 +28,7 @@ class DependsOf:
     def __call__(self, form, field):
         for k, v in self.fields.items():
             if hasattr(form, k) and getattr(form, k).data != v:
-                raise StopValidation(message=self.message)
+                return
 
         for validator in self.extra_validators:
             validator(form, field)
@@ -36,6 +42,73 @@ class TruckForm(FlaskForm):
         "Fuel Type", choices=["Gasoline", "Diesel"], validators=[DataRequired()]
     )
     driver = SelectField("Driver", validators=[DataRequired()])
+    truck_type = SelectField(
+        "Type", validators=[DataRequired()], choices=["Lightweight", "Heavy"]
+    )
+
+    # Lightweight truck fields
+    max_speed = DecimalField(
+        "Max. Speed",
+        validators=[
+            DependsOf(
+                {"truck_type": "Lightweight"},
+                extra_validators=[DataRequired(), NumberRange(min=0)],
+            )
+        ],
+        default=0,
+    )
+    max_load = DecimalField(
+        "Max. Load",
+        validators=[
+            DependsOf(
+                {"truck_type": "Lightweight"},
+                extra_validators=[DataRequired(), NumberRange(min=0)],
+            )
+        ],
+        default=0,
+    )
+
+    # Heavy truck fields
+    spend_by_kilometer = DecimalField(
+        "Spend by Km.",
+        validators=[
+            DependsOf(
+                {"truck_type": "Heavy"},
+                extra_validators=[DataRequired(), NumberRange(min=0)],
+            )
+        ],
+        default=0,
+    )
+    length = DecimalField(
+        "Length",
+        validators=[
+            DependsOf(
+                {"truck_type": "Heavy"},
+                extra_validators=[DataRequired(), NumberRange(min=0)],
+            )
+        ],
+        default=0,
+    )
+    width = DecimalField(
+        "Width",
+        validators=[
+            DependsOf(
+                {"truck_type": "Heavy"},
+                extra_validators=[DataRequired(), NumberRange(min=0)],
+            )
+        ],
+        default=0,
+    )
+    height = DecimalField(
+        "Height",
+        validators=[
+            DependsOf(
+                {"truck_type": "Heavy"},
+                extra_validators=[DataRequired(), NumberRange(min=0)],
+            )
+        ],
+        default=0,
+    )
 
 
 class EmployeeForm(FlaskForm):

@@ -68,19 +68,11 @@
 </div>
 
 <script type="text/javascript">
-    // function onChangeUserType() {
-    //     // alert(($( "input[name=user_type]:checked" ).val() == 'student'));
-    //     if ($("input[name=user_type]:checked").val() == 'student') {
-    //         $("#course_item").hide();
-    //     } else {
-    //         $("#course_item").show();
-    //     }
-    // }   
     $(document).ready(function () {
         const onEmployeeTypeChange = (x) => {
             const value = $("#employee_type").val();
             // alert(value);
-            if (value == 'Driver') {
+            if (value == "Driver") {
                 $("#driver_type_container").show();
                 $("#driver_evaluation_container").show();
                 $("#administrative_position_container").hide();
