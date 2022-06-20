@@ -17,7 +17,7 @@ class SchoolLevel(enum.Enum):
 
 
 class Employee(PkModel):
-    __tablename__ = "Employee"
+    __tablename__ = "Employees"
 
     phone = Column(db.String(20))
     name = Column(db.String(250), nullable=False, unique=True)
@@ -33,50 +33,50 @@ class DriverType(enum.Enum):
 
 
 class Driver(Model):
-    __tablename__ = "Driver"
+    __tablename__ = "Drivers"
 
-    employee_id = Column(db.Integer, ForeignKey("Employee.id"), primary_key=True)
+    employee_id = Column(db.Integer, ForeignKey("Employees.id"), primary_key=True)
     type = Column(db.Enum(DriverType))
     evaluation = Column(db.SmallInteger, nullable=False, default=0)
 
     # Relation fields
-    employee = relationship("Employee")
+    employee = relationship("Employees")
 
 class Administrative(Model):
-    __tablename__ = "Administrative"
+    __tablename__ = "Administratives"
 
-    employee_id = Column(db.Integer, ForeignKey("Employee.id"), primary_key=True)
+    employee_id = Column(db.Integer, ForeignKey("Employees.id"), primary_key=True)
     position = Column(db.String(20), nullable=False)
 
     # Relation fields
-    employee = relationship("Employee")
+    employee = relationship("Employees")
 
 class Truck(PkModel):
-    __tablename__ = "Truck"
+    __tablename__ = "Trucks"
 
     weight = Column(db.Float, nullable=False, default=0.0)
     model = Column(db.String(20), nullable=False)
     fuel_type = Column(db.String(20), nullable=False)
-    driver_id = Column(db.Integer, ForeignKey("Driver.employee_id"))
+    driver_id = Column(db.Integer, ForeignKey("Drivers.employee_id"))
 
     # Relation fields
-    driver = relationship("Driver")
+    driver = relationship("Drivers")
 
 class LightweightTruck(Model):
-    __tablename__ = "LightweightTruck"
+    __tablename__ = "LightweightTrucks"
 
-    truck_id = Column(db.Integer, ForeignKey("Truck.id"), primary_key=True)
+    truck_id = Column(db.Integer, ForeignKey("Trucks.id"), primary_key=True)
     max_speed = Column(db.Float, nullable=False, default=0.0)
     max_load = Column(db.Float, nullable=False, default=0.0)
 
     # Relation fields
-    truck = relationship("Truck")
+    truck = relationship("Trucks")
 
 
 class HeavyTruck(Model):
-    __tablename__ = "HeavyTruck"
+    __tablename__ = "HeavyTrucks"
 
-    truck_id = Column(db.Integer, ForeignKey("Truck.id"), primary_key=True)
+    truck_id = Column(db.Integer, ForeignKey("Trucks.id"), primary_key=True)
     spend_by_kilometer = Column(db.Float, nullable=False, default=0.0)
     length = Column(db.Float, nullable=False, default=0.0)
     width = Column(db.Float, nullable=False, default=0.0)
@@ -84,25 +84,25 @@ class HeavyTruck(Model):
     # mileage = Column(db.Float, nullable=False, default=0.0)
 
     # Relation fields
-    truck = relationship("Truck")
+    truck = relationship("Trucks")
 
 class Trip(PkModel):
-    __tablename__ = "Trip"
+    __tablename__ = "Trips"
 
     date = Column(db.Date, nullable=False)
     load = Column(db.Float, nullable=False, default=0.0)
     mileage = Column(db.Float, nullable=False, default=0.0)
-    truck_id = Column(db.Integer, ForeignKey("Truck.id"))
+    truck_id = Column(db.Integer, ForeignKey("Trucks.id"))
 
     # Relation fields
-    truck = relationship("Truck")
+    truck = relationship("Trucks")
 
 class InterprovincialTrip(Model):
-    __tablename__ = "InterprovincialTrip"
+    __tablename__ = "InterprovincialTrips"
 
-    trip_id = Column(db.Integer, ForeignKey("Trip.id"), primary_key=True)
+    trip_id = Column(db.Integer, ForeignKey("Trips.id"), primary_key=True)
     return_date = Column(db.Date, nullable=True)
     province_count = Column(db.SmallInteger, nullable=False, default=0)
 
     # Relation fields
-    trip = relationship("Trip")
+    trip = relationship("Trips")
