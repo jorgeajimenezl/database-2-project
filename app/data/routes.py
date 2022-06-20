@@ -1,7 +1,7 @@
 import re
 from typing import List
 
-from flask import flash, render_template
+from flask import flash, redirect, render_template, url_for
 
 from ..auth import login_required
 from . import data_bp
@@ -54,6 +54,8 @@ def register_truck():
                     height=float(form.height.data),
                 )
                 flash("Heavy truck registration successfull!!", "success")
+
+            return redirect(url_for("data.manage_truck"))
         elif form.is_submitted():
             flash("Invalid driver data", "danger")
 
@@ -178,6 +180,8 @@ def register_employee():
             )
 
             flash("Administrative registration successfull!!", "success")
+
+        return redirect(url_for("data.manage_employee"))
     elif form.is_submitted():
         flash("Invalid employee data", "danger")
 
