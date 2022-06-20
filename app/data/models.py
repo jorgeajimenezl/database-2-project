@@ -40,7 +40,7 @@ class Driver(Model):
     evaluation = Column(db.SmallInteger, nullable=False, default=0)
 
     # Relation fields
-    employee = relationship("Employees")
+    employee = relationship("Employee")
 
 class Administrative(Model):
     __tablename__ = "Administratives"
@@ -49,7 +49,7 @@ class Administrative(Model):
     position = Column(db.String(20), nullable=False)
 
     # Relation fields
-    employee = relationship("Employees")
+    employee = relationship("Employee")
 
 class Truck(PkModel):
     __tablename__ = "Trucks"
@@ -60,7 +60,7 @@ class Truck(PkModel):
     driver_id = Column(db.Integer, ForeignKey("Drivers.employee_id"))
 
     # Relation fields
-    driver = relationship("Drivers")
+    driver = relationship("Driver")
 
 class LightweightTruck(Model):
     __tablename__ = "LightweightTrucks"
@@ -70,7 +70,7 @@ class LightweightTruck(Model):
     max_load = Column(db.Float, nullable=False, default=0.0)
 
     # Relation fields
-    truck = relationship("Trucks")
+    truck = relationship("Truck")
 
 
 class HeavyTruck(Model):
@@ -84,7 +84,7 @@ class HeavyTruck(Model):
     # mileage = Column(db.Float, nullable=False, default=0.0)
 
     # Relation fields
-    truck = relationship("Trucks")
+    truck = relationship("Truck")
 
 class Trip(PkModel):
     __tablename__ = "Trips"
@@ -95,7 +95,7 @@ class Trip(PkModel):
     truck_id = Column(db.Integer, ForeignKey("Trucks.id"))
 
     # Relation fields
-    truck = relationship("Trucks")
+    truck = relationship("Truck")
 
 class InterprovincialTrip(Model):
     __tablename__ = "InterprovincialTrips"
@@ -105,4 +105,4 @@ class InterprovincialTrip(Model):
     province_count = Column(db.SmallInteger, nullable=False, default=0)
 
     # Relation fields
-    trip = relationship("Trips")
+    trip = relationship("Trip")

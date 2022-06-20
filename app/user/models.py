@@ -27,7 +27,7 @@ class UserAccount(PkModel, UserMixin):
     role_id = Column(db.Integer, ForeignKey("Roles.id"))
 
     # Relation fields
-    role = relationship("Roles")
+    role = relationship("Role")
 
     def set_new_password(self, passwd):
         self.update(
