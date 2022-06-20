@@ -22,7 +22,7 @@ ENV = os.environ.get("FLASK_ENV", Environments.PRODUCTION)
 
 # Database
 SQLALCHEMY_DATABASE_URI = os.environ.get(
-    "SQLALCHEMY_DATABASE_URI", "postgresql://postgres:123@localhost:5432/app"
+    "SQLALCHEMY_DATABASE_URI", "mysql+pymysql://root:m@127.0.0.1:3306/Trucks?charset=utf8mb4"
 )
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 

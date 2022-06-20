@@ -3,7 +3,7 @@ from typing import List
 
 from flask import flash, redirect, render_template, url_for
 
-from ..auth import login_required
+from ..auth import login_required, role_required
 from . import data_bp
 from .forms import EmployeeForm, TruckForm
 from .models import (
@@ -17,8 +17,8 @@ from .models import (
     Truck,
 )
 
-
 @data_bp.route("/register/truck", methods=["GET", "POST"])
+@role_required("Administrator")
 def register_truck():
     form = TruckForm()
     drivers: List[Driver] = Driver.query.all()
@@ -149,6 +149,7 @@ def manage_truck():
 
 
 @data_bp.route("/register/employee", methods=["GET", "POST"])
+@role_required("Administrator")
 def register_employee():
     form = EmployeeForm()
 

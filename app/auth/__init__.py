@@ -1,6 +1,8 @@
+from typing import List, Union
 from flask import (
     Blueprint,
     current_app,
+    flash,
     redirect,
     url_for,
 )
@@ -36,6 +38,23 @@ def verification_setting_required(func):
         return func(*args, **kwargs)
 
     return wrapper
+
+
+def role_required(role: Union[str, int, List[Union[str, int]]]):
+    def layer(func):
+        @login_required()
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            roles = [role] if not isinstance(role, list) else role
+
+            if not current_user.role.name in roles and not current_user.role_id in roles:
+                flash("Your user doesn't have permission", "danger")
+                return redirect(url_for("core.home"))
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return layer
 
 
 from .routes import auth_bp

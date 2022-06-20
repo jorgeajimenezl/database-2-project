@@ -24,7 +24,7 @@ class UserAccount(PkModel, UserMixin):
     password = Column(db.Text, nullable=False)
     is_verified = Column(db.Boolean, default=False)
     last_active = Column(db.DateTime)
-    role_id = Column(db.Integer, ForeignKey("Roles.id"))
+    role_id = Column(db.Integer, ForeignKey("Roles.id"), nullable=False)
 
     # Relation fields
     role = relationship("Role")
