@@ -10,6 +10,7 @@ from flask_mail import Message
 from flask_login import (
     current_user,
     login_user,
+    logout_user
 )
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
@@ -121,6 +122,6 @@ def user_verify(token):
 @auth_bp.route("/logout")
 @login_required(verified_only=False)
 def logout():
-    current_user.logout()
+    logout_user()
     flash("You have been logged out!", "info")
     return redirect(url_for("auth.login"))

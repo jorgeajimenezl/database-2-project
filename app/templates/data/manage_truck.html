@@ -1,0 +1,24 @@
+{% extends 'core/layout.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-11 d-flex mb-3">
+        <div class="p-2">
+            <div class="h3">
+                Trucks
+            </div>
+        </div>
+        <div class="ml-auto p-2">
+            <a class="btn btn-secondary" href="{{ url_for('data.register_truck') }}" role="button">Register</a>
+        </div>
+    </div>
+    {% with title='Lightweight', headers=lightweight_headers, data=lightweight_data %}
+    {% include 'data/_table.html' %}
+    {% endwith %}
+
+    <div class="col-11 mb-3"></div>
+
+    {% with title='Heavy', headers=heavy_headers, data=heavy_data %}
+    {% include 'data/_table.html' %}
+    {% endwith %}
+</div>
+{% endblock %}

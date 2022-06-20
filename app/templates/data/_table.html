@@ -1,0 +1,27 @@
+<div class="col-11 border rounded bg-white">
+    <div class="row border-bottom py-2">
+        <div class="col-12">
+            <span class="fw-bold">
+                {{ title }}
+            </span>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for head in headers %}
+                <th scope="col">{{ head }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                {% for item in row %}
+                <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
