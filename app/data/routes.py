@@ -18,7 +18,7 @@ from .models import (
 )
 
 @data_bp.route("/register/truck", methods=["GET", "POST"])
-@role_required("Administrator")
+@role_required(["Administrator", "Manager"])
 def register_truck():
     form = TruckForm()
     drivers: List[Driver] = Driver.query.all()
@@ -63,6 +63,7 @@ def register_truck():
 
 
 @data_bp.route("/manage/employee")
+@login_required()
 def manage_employee():
     headers = [
         "ID",
@@ -107,6 +108,7 @@ def manage_employee():
 
 
 @data_bp.route("/manage/truck")
+@login_required()
 def manage_truck():
     headers = [
         "ID",
@@ -149,7 +151,7 @@ def manage_truck():
 
 
 @data_bp.route("/register/employee", methods=["GET", "POST"])
-@role_required("Administrator")
+@role_required(["Administrator", "Manager"])
 def register_employee():
     form = EmployeeForm()
 

@@ -10,8 +10,39 @@ from ..auth.utils import validate_password
 
 user_cli = AppGroup("user", help="Manage user data")
 
+@user_cli.command("seed_test", help="Seed the database with initial test data")
+def seed_test():
+    basic_password = bcrypt.generate_password_hash('12345678').decode("utf-8")
 
-@user_cli.command("create")
+    # Create roles
+    admin_role_id = Role.create(name="Administrator").id
+    manager_role_id = Role.create(name="Manager").id
+    dispatcher_role_id = Role.create(name="Dispatcher").id
+    
+    # Create user accounts
+    UserAccount.create(
+        email='admin@trucks.com',
+        password=basic_password,
+        is_verified=True,
+        role_id=admin_role_id
+    )
+    UserAccount.create(
+        email='livan@trucks.com',
+        password=basic_password,
+        is_verified=True,
+        role_id=manager_role_id
+    )
+    UserAccount.create(
+        email='jorge@trucks.com',
+        password=basic_password,
+        is_verified=True,
+        role_id=dispatcher_role_id
+    )
+
+    current_app.logger.info("Data seeded!")
+    
+
+@user_cli.command("create", help="Create a new user")
 @click.argument("email")
 @click.argument("role")
 @click.option(
@@ -52,7 +83,7 @@ def create_user(email: str, role: str, verified: bool):
         current_app.logger.info("User Added!")
 
 
-@user_cli.command("create_role")
+@user_cli.command("create_role", help="Create new role")
 @click.argument("name")
 @click.argument("description", required=False)
 def create_role(name: str, description: str = None):
@@ -68,7 +99,7 @@ def create_role(name: str, description: str = None):
     else:
         current_app.logger.info("Role Added!")
 
-@user_cli.command("password_reset")
+@user_cli.command("password_reset", help="Reset the password of specific user")
 @click.argument("email")
 def password_reset(email: str):
     user = UserAccount.query.filter_by(email=email).first()

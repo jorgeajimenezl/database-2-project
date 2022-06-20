@@ -15,7 +15,7 @@ from flask_login import (
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
-from . import auth_bp, verification_setting_required, login_required
+from . import auth_bp, role_required, verification_setting_required, login_required
 from .forms import LoginForm, RegistrationForm, EmailForm, PasswordForm
 from .. import db, bcrypt, email
 from ..user.enums import AccountLogActions
@@ -44,9 +44,10 @@ def login():
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])
+@role_required("Administrator")
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for("core.home"))
+    # if current_user.is_authenticated:
+    #     return redirect(url_for("core.home"))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = UserAccount(

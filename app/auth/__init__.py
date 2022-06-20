@@ -48,7 +48,7 @@ def role_required(role: Union[str, int, List[Union[str, int]]]):
             roles = [role] if not isinstance(role, list) else role
 
             if not current_user.role.name in roles and not current_user.role_id in roles:
-                flash("Your user doesn't have permission", "danger")
+                flash("You don't have enough permissions", "danger")
                 return redirect(url_for("core.home"))
             return func(*args, **kwargs)
 
