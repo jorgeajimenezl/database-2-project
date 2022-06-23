@@ -1,3 +1,4 @@
+from datetime import date
 import re
 from typing import List
 
@@ -5,22 +6,24 @@ from flask import flash, redirect, render_template, url_for
 
 from ..auth import login_required, role_required
 from . import data_bp
-from .forms import EmployeeForm, TruckForm
+from .forms import RegisterEmployeeForm, RegisterTripForm, RegisterTruckForm
 from .models import (
     Administrative,
     Driver,
     Employee,
     Gender,
     HeavyTruck,
+    InterprovincialTrip,
     LightweightTruck,
     SchoolLevel,
+    Trip,
     Truck,
 )
 
 @data_bp.route("/register/truck", methods=["GET", "POST"])
 @role_required(["Administrator", "Manager"])
 def register_truck():
-    form = TruckForm()
+    form = RegisterTruckForm()
     drivers: List[Driver] = Driver.query.all()
     form.driver.choices = [x.employee.name for x in drivers]
 
@@ -31,7 +34,8 @@ def register_truck():
                 index = i.employee_id
 
         if index != -1:
-            t = Truck.create(
+            Truck.create(
+                id=form.id.data,
                 weight=float(form.weight.data),
                 model=form.model.data,
                 fuel_type=form.fuel_type.data,
@@ -40,14 +44,14 @@ def register_truck():
 
             if form.truck_type.data == "Lightweight":
                 LightweightTruck.create(
-                    truck_id=t.id,
+                    truck_id=form.id.data,
                     max_speed=float(form.max_speed.data),
                     max_load=float(form.max_load.data),
                 )
                 flash("Lightweight truck registration successfull!!", "success")
             else:
                 HeavyTruck.create(
-                    truck_id=t.id,
+                    truck_id=form.id.data,
                     spend_by_kilometer=float(form.spend_by_kilometer.data),
                     length=float(form.length.data),
                     width=float(form.width.data),
@@ -153,7 +157,7 @@ def manage_truck():
 @data_bp.route("/register/employee", methods=["GET", "POST"])
 @role_required(["Administrator", "Manager"])
 def register_employee():
-    form = EmployeeForm()
+    form = RegisterEmployeeForm()
 
     if form.validate_on_submit():
         # Normalize phone number
@@ -189,3 +193,31 @@ def register_employee():
         flash("Invalid employee data", "danger")
 
     return render_template("data/register_employee.html", form=form)
+
+@data_bp.route("/register/trip", methods=["GET", "POST"])
+@role_required(["Administrator", "Manager"])
+def register_trip():
+    form = RegisterTripForm()
+    trucks: List[Truck] = Truck.query.all() 
+    form.truck.choices = [x.id for x in trucks]
+
+    if form.validate_on_submit():
+        if not any(map(lambda x: x.id == form.truck.data, trucks)):
+            flash("Invalid driver data", "danger")
+        else:
+            t = Trip.create(
+                date=form.date.data,
+                load=float(form.load.data),
+                destination=form.destination.data,
+                truck_id=form.truck.data
+            )
+
+            if form.is_interprovincial.data:
+                InterprovincialTrip.create(
+                    trip_id=t.id,
+                    return_date=form.return_date.data
+                )
+
+            flash("Successfull trip register", "success")            
+
+    return render_template("data/register_trip.html", form=form)

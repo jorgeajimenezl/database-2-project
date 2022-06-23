@@ -1,0 +1,66 @@
+{% extends 'core/layout.html' %}
+{% block content %}
+
+{% with title="Register trip" %}
+{% include 'data/_header.html' %}
+{% endwith %}
+<div class="row justify-content-center">
+    <div class="col-11 col-md-6 col-lg-4">
+        <div class="col-12 border rounded bg-white p-3">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="col-12 mb-3">
+                    {% with field=form.destination %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.date %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.load %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    {% with field=form.truck %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="form-check">
+                        {{ form.is_interprovincial(class='form-check-input') }}
+                        {{ form.is_interprovincial.label(class='form-check-label') }}
+                    </div>                    
+                </div>
+                <div class="col-12 mb-3" id="return_date_container" style="display: none;">
+                    {% with field=form.return_date %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="row col-12 justify-content-center border-top g-0 pt-3">
+                    <button class="btn btn-primary">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        const onChange = (x) => {
+            const value = $("input[name=is_interprovincial]:checked").val();
+            // alert(value);
+            if (value == "y") {
+                $("#return_date_container").show();
+            } else {
+                $("#return_date_container").hide();
+            }
+        };
+        $("#is_interprovincial").change(onChange);
+        onChange();
+    });
+</script>
+{% endblock %}

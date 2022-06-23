@@ -1,10 +1,14 @@
 from flask_wtf import FlaskForm
+from pymysql import Date
+from traitlets import default
 from wtforms import (
     ValidationError,
     StringField,
     DecimalField,
     SelectField,
     IntegerField,
+    DateField,
+    BooleanField,
 )
 from wtforms.validators import (
     DataRequired,
@@ -16,7 +20,7 @@ from wtforms.validators import (
 
 # import phonenumbers
 
-from .models import DriverType, Gender, SchoolLevel
+from .models import DriverType, Gender, InterprovincialTrip, SchoolLevel
 
 
 class DependsOf:
@@ -35,7 +39,8 @@ class DependsOf:
         return
 
 
-class TruckForm(FlaskForm):
+class RegisterTruckForm(FlaskForm):
+    id = StringField("ID", validators=[DataRequired()])
     model = StringField("Model", validators=[DataRequired()])
     weight = DecimalField("Weight", validators=[DataRequired()])
     fuel_type = SelectField(
@@ -111,7 +116,7 @@ class TruckForm(FlaskForm):
     )
 
 
-class EmployeeForm(FlaskForm):
+class RegisterEmployeeForm(FlaskForm):
     phone = StringField(
         "Phone",
         validators=[
@@ -175,5 +180,22 @@ class EmployeeForm(FlaskForm):
             DependsOf(
                 {"employee_type": "Administrative"}, extra_validators=[DataRequired()]
             )
+        ],
+    )
+
+
+class RegisterTripForm(FlaskForm):
+    date = DateField("Date", validators=[DataRequired()])
+    load = DecimalField(
+        "Load", validators=[DataRequired(), NumberRange(min=0)], default=0
+    )
+    destination = StringField("Destination", validators=[DataRequired()])
+    truck = SelectField("Truck", validators=[DataRequired()])
+
+    is_interprovincial = BooleanField("Is interprovincial?", default=False)
+    return_date = DateField(
+        "Return date",
+        validators=[
+            DependsOf({"is_interprovincial": True}, extra_validators=[DataRequired()])
         ],
     )

@@ -51,9 +51,10 @@ class Administrative(Model):
     # Relation fields
     employee = relationship("Employee")
 
-class Truck(PkModel):
+class Truck(Model):
     __tablename__ = "Trucks"
 
+    id = Column(db.String(20), nullable=False, primary_key=True)
     weight = Column(db.Float, nullable=False, default=0.0)
     model = Column(db.String(20), nullable=False)
     fuel_type = Column(db.String(20), nullable=False)
@@ -65,7 +66,7 @@ class Truck(PkModel):
 class LightweightTruck(Model):
     __tablename__ = "LightweightTrucks"
 
-    truck_id = Column(db.Integer, ForeignKey("Trucks.id"), primary_key=True)
+    truck_id = Column(db.String(20), ForeignKey("Trucks.id"), primary_key=True)
     max_speed = Column(db.Float, nullable=False, default=0.0)
     max_load = Column(db.Float, nullable=False, default=0.0)
 
@@ -76,7 +77,7 @@ class LightweightTruck(Model):
 class HeavyTruck(Model):
     __tablename__ = "HeavyTrucks"
 
-    truck_id = Column(db.Integer, ForeignKey("Trucks.id"), primary_key=True)
+    truck_id = Column(db.String(20), ForeignKey("Trucks.id"), primary_key=True)
     spend_by_kilometer = Column(db.Float, nullable=False, default=0.0)
     length = Column(db.Float, nullable=False, default=0.0)
     width = Column(db.Float, nullable=False, default=0.0)
@@ -91,8 +92,9 @@ class Trip(PkModel):
 
     date = Column(db.Date, nullable=False)
     load = Column(db.Float, nullable=False, default=0.0)
-    mileage = Column(db.Float, nullable=False, default=0.0)
-    truck_id = Column(db.Integer, ForeignKey("Trucks.id"), nullable=False)
+    # mileage = Column(db.Float, nullable=False, default=0.0)
+    destination = Column(db.String(200), nullable=False)
+    truck_id = Column(db.String(20), ForeignKey("Trucks.id"), nullable=False)
 
     # Relation fields
     truck = relationship("Truck")
@@ -102,7 +104,7 @@ class InterprovincialTrip(Model):
 
     trip_id = Column(db.Integer, ForeignKey("Trips.id"), primary_key=True)
     return_date = Column(db.Date, nullable=True)
-    province_count = Column(db.SmallInteger, nullable=False, default=0)
+    # province_count = Column(db.SmallInteger, nullable=False, default=0)
 
     # Relation fields
     trip = relationship("Trip")

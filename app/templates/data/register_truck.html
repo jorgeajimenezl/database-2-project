@@ -10,6 +10,11 @@
                 <form method="POST">
                     {{ form.csrf_token }}
                     <div class="col-12 mb-3">
+                        {% with field=form.id %}
+                        {% include 'core/components/inputs/floating_label.html' %}
+                        {% endwith %}
+                    </div>
+                    <div class="col-12 mb-3">
                         {% with field=form.model %}
                         {% include 'core/components/inputs/floating_label.html' %}
                         {% endwith %}
