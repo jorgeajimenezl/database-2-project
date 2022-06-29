@@ -20,6 +20,7 @@ from .models import (
     Truck,
 )
 
+
 @data_bp.route("/register/truck", methods=["GET", "POST"])
 @role_required(["Administrator", "Manager"])
 def register_truck():
@@ -154,6 +155,22 @@ def manage_truck():
     )
 
 
+@data_bp.route("/manage/trip")
+@login_required()
+def manage_trip():
+    headers = ["ID", "Destination", "Date", "Load", "Interprovincial?", "Return date"]
+    trips = Trip.query.all()
+
+    def get_data(x: Trip):
+        i = InterprovincialTrip.query.filter_by(trip_id=x.id).first()
+        return [x.id, x.destination, x.date, x.load, bool(i), i.return_date if i else '-'] 
+
+    return render_template(
+        "data/manage_trip.html",
+        trips_headers=headers,
+        trips_data=list(map(get_data, trips))
+    )
+
 @data_bp.route("/register/employee", methods=["GET", "POST"])
 @role_required(["Administrator", "Manager"])
 def register_employee():
@@ -194,11 +211,12 @@ def register_employee():
 
     return render_template("data/register_employee.html", form=form)
 
+
 @data_bp.route("/register/trip", methods=["GET", "POST"])
 @role_required(["Administrator", "Manager"])
 def register_trip():
     form = RegisterTripForm()
-    trucks: List[Truck] = Truck.query.all() 
+    trucks: List[Truck] = Truck.query.all()
     form.truck.choices = [x.id for x in trucks]
 
     if form.validate_on_submit():
@@ -209,15 +227,15 @@ def register_trip():
                 date=form.date.data,
                 load=float(form.load.data),
                 destination=form.destination.data,
-                truck_id=form.truck.data
+                truck_id=form.truck.data,
             )
 
             if form.is_interprovincial.data:
                 InterprovincialTrip.create(
-                    trip_id=t.id,
-                    return_date=form.return_date.data
+                    trip_id=t.id, return_date=form.return_date.data
                 )
 
-            flash("Successfull trip register", "success")            
+            flash("Successfull trip register", "success")
+            return redirect(url_for("data.manage_trip"))
 
     return render_template("data/register_trip.html", form=form)
