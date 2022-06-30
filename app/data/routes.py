@@ -84,7 +84,7 @@ def manage_employee():
         "Laboral experience",
         "Address",
     )
-    administratives_headers = headers + ("Position")
+    administratives_headers = headers + ("Position", )
     drivers_headers = headers + ("Driver type", "Evaluation")
 
     administratives_data = Administrative.query.all()
@@ -105,12 +105,12 @@ def manage_employee():
         "data/manage_employee.html",
         administratives_headers=administratives_headers,
         administratives_data=list(
-            map(lambda x: get_data(x.employee) + [x.position], administratives_data)
+            map(lambda x: get_data(x.employee) + (x.position, ), administratives_data)
         ),
         drivers_headers=drivers_headers,
         drivers_data=list(
             map(
-                lambda x: get_data(x.employee) + [x.type.name, x.evaluation],
+                lambda x: get_data(x.employee) + (x.type.name, x.evaluation),
                 drivers_data,
             )
         ),

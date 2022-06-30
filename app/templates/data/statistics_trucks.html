@@ -1,9 +1,12 @@
 {% extends 'core/layout.html' %}
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-11 d-flex mb-3">
-        <div class="p-2 h3">
-            Trucks statistics (last week)
+<div class="row justify-content-center mx-5 my-3">
+    <div class="d-flex mb-3">
+        <div class="py-2">
+            <div class="h2">
+                <i class="fa-solid fa-bar-chart h3"></i>
+                Statistics
+            </div>
         </div>
     </div>
     {% with title='', headers=headers, data=data %}
