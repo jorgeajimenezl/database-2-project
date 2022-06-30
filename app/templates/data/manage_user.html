@@ -1,0 +1,23 @@
+{% extends 'core/layout.html' %}
+{% block content %}
+<div class="row justify-content-center mx-5 my-3">
+    <div class="d-flex mb-3">
+        <div class="py-2">
+            <div class="h2">
+                <i class="fa-solid fa-user"></i>
+                Users
+            </div>
+        </div>
+    </div>
+    <div class="mb-4">
+        <a class="btn btn-primary" href="{{ url_for('auth.register') }}" role="button">
+            <i class="fa-solid fa-plus"></i>
+            Register user
+        </a>
+    </div>
+    <hr>
+    {% with title='Users', headers=headers, data=data %}
+    {% include 'data/_table.html' %}
+    {% endwith %}
+</div>
+{% endblock %}

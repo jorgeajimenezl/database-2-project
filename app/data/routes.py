@@ -6,6 +6,8 @@ from typing import List
 from flask import flash, redirect, render_template, url_for
 from sqlalchemy import func, select
 
+from ..user.models import UserAccount
+
 from ..auth import login_required, role_required
 from . import data_bp
 from .. import db
@@ -304,18 +306,46 @@ def generate_paysheet():
 
 
 @data_bp.route("/statistics/trucks")
-# @login_required()
+@login_required()
 def statistics_trucks():
     query1 = (
-        db.session.query(Truck.id, func.sum(Trip.distance), func.avg(Trip.distance), func.sum(Trip.load))
+        db.session.query(
+            Truck.id,
+            func.sum(Trip.distance),
+            func.avg(Trip.distance),
+            func.sum(Trip.load),
+        )
         .join(Trip.truck)
         .group_by(Truck.id)
-        .union(db.session.query(Truck.id, 0, 0, 0).filter(Truck.id.not_in(select(Trip.truck_id))))
+        .union(
+            db.session.query(Truck.id, 0, 0, 0).filter(
+                Truck.id.not_in(select(Trip.truck_id))
+            )
+        )
         .all()
     )
 
     return render_template(
         "data/statistics_trucks.html",
-        headers=["Truck ID", "Total distance (Km.)", "Average distance (Km.)", "Total load (Kg.)"],
+        headers=[
+            "Truck ID",
+            "Total distance (Km.)",
+            "Average distance (Km.)",
+            "Total load (Kg.)",
+        ],
         data=query1,
+    )
+
+
+@data_bp.route("/manage/user")
+@role_required("Administrator")
+def manage_user():
+    def get_data(x: UserAccount):
+        return (x.id, x.email, x.last_active, x.role.name)
+
+    users = UserAccount.query.all()
+    return render_template(
+        "data/manage_user.html",
+        headers=["ID", "Email", "Last time active", "Role"],
+        data=map(get_data, users),
     )

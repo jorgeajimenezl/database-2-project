@@ -52,6 +52,12 @@
                                     Employee
                                 </a></li>
                                 {% endif %}
+                                {% if current_user.role.name == "Administrator" %}
+                                <li><a class="dropdown-item" href="{{ url_for('data.manage_user') }}">
+                                    <i class="fa-solid fa-user"></i>
+                                    Users
+                                </a></li>
+                                {% endif %}
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_trip') }}">
                                     <i class="fa-solid fa-suitcase-rolling"></i>
                                     Trips
