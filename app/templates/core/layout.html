@@ -40,10 +40,12 @@
                                 Manage
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% if current_user.is_authenticated and current_user.role.name != "Dispatcher" %}
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_truck') }}">Truck</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('data.manage_trip') }}">Trip</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_employee') }}">Employee</a>
-                                </li>
+                                {% endif %}
+
+                                <li><a class="dropdown-item" href="{{ url_for('data.manage_trip') }}">Trip</a></li>                                
                             </ul>
                         </li>
 

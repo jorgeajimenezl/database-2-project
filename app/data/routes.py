@@ -71,7 +71,7 @@ def register_truck():
 
 
 @data_bp.route("/manage/employee")
-@login_required()
+@role_required(["Administrator", "Manager"])
 def manage_employee():
     headers = [
         "ID",
@@ -116,7 +116,7 @@ def manage_employee():
 
 
 @data_bp.route("/manage/truck")
-@login_required()
+@role_required(["Administrator", "Manager"])
 def manage_truck():
     headers = [
         "ID",
@@ -155,38 +155,6 @@ def manage_truck():
                 heavy_data,
             )
         ),
-    )
-
-
-@data_bp.route("/manage/trip")
-@login_required()
-def manage_trip():
-    trips = Trip.query.all()
-
-    def get_data(x: Trip):
-        i = InterprovincialTrip.query.filter_by(trip_id=x.id).first()
-        return [
-            x.id,
-            x.destination,
-            x.date,
-            x.load,
-            bool(i),
-            x.truck_id,
-            i.return_date if i else "-",
-        ]
-
-    return render_template(
-        "data/manage_trip.html",
-        trips_headers=[
-            "ID",
-            "Destination",
-            "Date",
-            "Load",
-            "Interprovincial?",
-            "Truck id",
-            "Return date",
-        ],
-        trips_data=list(map(get_data, trips)),
     )
 
 
@@ -234,7 +202,7 @@ def register_employee():
 
 
 @data_bp.route("/register/trip", methods=["GET", "POST"])
-@role_required(["Administrator", "Manager"])
+@login_required()
 def register_trip():
     form = RegisterTripForm()
     trucks: List[Truck] = Truck.query.all()
@@ -262,8 +230,40 @@ def register_trip():
     return render_template("data/register_trip.html", form=form)
 
 
+@data_bp.route("/manage/trip")
+@login_required()
+def manage_trip():
+    trips = Trip.query.all()
+
+    def get_data(x: Trip):
+        i = InterprovincialTrip.query.filter_by(trip_id=x.id).first()
+        return [
+            x.id,
+            x.destination,
+            x.date,
+            x.load,
+            bool(i),
+            x.truck_id,
+            i.return_date if i else "-",
+        ]
+
+    return render_template(
+        "data/manage_trip.html",
+        trips_headers=[
+            "ID",
+            "Destination",
+            "Date",
+            "Load",
+            "Interprovincial?",
+            "Truck id",
+            "Return date",
+        ],
+        trips_data=list(map(get_data, trips)),
+    )
+
+
 @data_bp.route("/generate-paysheet")
-# @role_required(["Administrator", "Manager"])
+@role_required(["Administrator", "Manager"])
 def generate_paysheet():
     def get_data():
         return itertools.chain(
@@ -283,12 +283,11 @@ def generate_paysheet():
             (
                 db.session.query(Employee.name, 4500).filter(
                     Employee.id.not_in(select(Driver.employee_id)),
-                    Employee.id.not_in(select(Administrative.employee_id))
+                    Employee.id.not_in(select(Administrative.employee_id)),
                 )
             ),
         )
 
-    get_data()
     return render_template(
         "data/paysheet.html", headers=["Name", "Salary (USD)"], employees=get_data()
     )
