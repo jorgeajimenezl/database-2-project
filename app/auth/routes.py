@@ -37,7 +37,7 @@ def login():
                 flash("You have been logged in!", "success")
                 return redirect(url_for("user.profile"))
             else:
-                user.reg_login_failure()
+                # user.reg_login_failure()
                 flash("Invalid Credentials", "danger")
 
     return render_template("auth/login.html", form=form)
