@@ -1,10 +1,11 @@
+from datetime import date, timedelta
 import itertools
 import re
 import itertools
 from typing import List
 
 from flask import flash, redirect, render_template, url_for
-from sqlalchemy import func, select
+from sqlalchemy import func, not_, select, not_
 
 from ..user.models import UserAccount
 
@@ -296,7 +297,7 @@ def generate_paysheet():
                 db.session.query(Employee.name, 4500).filter(
                     Employee.id.not_in(select(Driver.employee_id)),
                     Employee.id.not_in(select(Administrative.employee_id)),
-                )
+                ).all()
             ),
         )
 
@@ -308,7 +309,10 @@ def generate_paysheet():
 @data_bp.route("/statistics/trucks")
 @login_required()
 def statistics_trucks():
-    query1 = (
+    range = (date.today() - timedelta(days=7), date.today())
+    sub = select(Trip.id).filter(not_(Trip.date.between(*range))).subquery()
+
+    data = (
         db.session.query(
             Truck.id,
             func.sum(Trip.distance),
@@ -316,10 +320,11 @@ def statistics_trucks():
             func.sum(Trip.load),
         )
         .join(Trip.truck)
+        .filter(Trip.date.between(*range))
         .group_by(Truck.id)
         .union(
             db.session.query(Truck.id, 0, 0, 0).filter(
-                Truck.id.not_in(select(Trip.truck_id))
+                Truck.id.not_in(sub)
             )
         )
         .all()
@@ -333,7 +338,7 @@ def statistics_trucks():
             "Average distance (Km.)",
             "Total load (Kg.)",
         ],
-        data=query1,
+        data=data,
     )
 
 
