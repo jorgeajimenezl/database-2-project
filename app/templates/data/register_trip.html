@@ -25,6 +25,11 @@
                     {% endwith %}
                 </div>
                 <div class="col-12 mb-3">
+                    {% with field=form.distance %}
+                    {% include 'core/components/inputs/floating_label.html' %}
+                    {% endwith %}
+                </div>
+                <div class="col-12 mb-3">
                     {% with field=form.truck %}
                     {% include 'core/components/inputs/floating_label.html' %}
                     {% endwith %}

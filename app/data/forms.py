@@ -1,6 +1,4 @@
 from flask_wtf import FlaskForm
-from pymysql import Date
-from traitlets import default
 from wtforms import (
     ValidationError,
     StringField,
@@ -190,6 +188,7 @@ class RegisterTripForm(FlaskForm):
         "Load", validators=[DataRequired(), NumberRange(min=0)], default=0
     )
     destination = StringField("Destination", validators=[DataRequired()])
+    distance = DecimalField("Distance", validators=[DataRequired(), NumberRange(min=0)])
     truck = SelectField("Truck", validators=[DataRequired()])
 
     is_interprovincial = BooleanField("Is interprovincial?", default=False)

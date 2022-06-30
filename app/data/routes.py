@@ -215,6 +215,7 @@ def register_trip():
             t = Trip.create(
                 date=form.date.data,
                 load=float(form.load.data),
+                distance=float(form.distance.data),
                 destination=form.destination.data,
                 truck_id=form.truck.data,
             )
@@ -242,6 +243,7 @@ def manage_trip():
             x.destination,
             x.date,
             x.load,
+            x.distance,
             bool(i),
             x.truck_id,
             i.return_date if i else "-",
@@ -253,7 +255,8 @@ def manage_trip():
             "ID",
             "Destination",
             "Date",
-            "Load",
+            "Load (Kg.)",
+            "Distance (Km.)",
             "Interprovincial?",
             "Truck id",
             "Return date",
@@ -301,6 +304,15 @@ def generate_paysheet():
 
 
 @data_bp.route("/statistics/trucks")
-@login_required()
+# @login_required()
 def statistics_trucks():
+    query1 = (
+        db.session.query(
+            Truck.id, func.sum(Trip.distance), func.avg(Trip.distance)
+        )
+        .join(Trip.truck)
+        .group_by(Truck.id)
+        .all()
+    )
+
     return render_template("data/statistics_trucks.html")

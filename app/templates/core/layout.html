@@ -34,13 +34,14 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
+                        {% if current_user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 Manage
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {% if current_user.is_authenticated and current_user.role.name != "Dispatcher" %}
+                                {% if current_user.role.name != "Dispatcher" %}
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_truck') }}">Truck</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_employee') }}">Employee</a>
                                 {% endif %}
@@ -48,6 +49,7 @@
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_trip') }}">Trip</a></li>                                
                             </ul>
                         </li>
+                        {% endif %}
 
                         <!-- Login/Logout button -->
                         {% if current_user.is_authenticated %}

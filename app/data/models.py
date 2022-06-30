@@ -92,7 +92,7 @@ class Trip(PkModel):
 
     date = Column(db.Date, nullable=False)
     load = Column(db.Float, nullable=False, default=0.0)
-    # mileage = Column(db.Float, nullable=False, default=0.0)
+    distance = Column(db.Float, nullable=False, default=0.0)
     destination = Column(db.String(200), nullable=False)
     truck_id = Column(db.String(20), ForeignKey("Trucks.id"), nullable=False)
 
