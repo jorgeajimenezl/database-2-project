@@ -43,10 +43,15 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 {% if current_user.role.name != "Dispatcher" %}
-                                <li><a class="dropdown-item" href="{{ url_for('data.manage_truck') }}">Truck</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('data.manage_employee') }}">Employee</a>
+                                <li><a class="dropdown-item" href="{{ url_for('data.manage_truck') }}">
+                                    <i class="fa-solid fa-truck"></i>
+                                    Truck
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('data.manage_employee') }}">
+                                    <i class="fa-solid fa-address-card"></i>
+                                    Employee
+                                </a></li>
                                 {% endif %}
-
                                 <li><a class="dropdown-item" href="{{ url_for('data.manage_trip') }}">
                                     <i class="fa-solid fa-suitcase-rolling"></i>
                                     Trips

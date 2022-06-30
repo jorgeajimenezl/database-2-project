@@ -1,4 +1,4 @@
-from flask import redirect, url_for
+from flask import redirect, render_template, url_for
 
 from . import core_bp
 from ..auth import login_required
@@ -8,4 +8,5 @@ from ..auth import login_required
 @core_bp.route("/home")
 @login_required()
 def home():
-    return redirect(url_for("user.profile"))
+    return render_template("core/home.html")
+    # return redirect(url_for("user.profile"))
