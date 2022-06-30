@@ -75,7 +75,7 @@ def register_truck():
 @data_bp.route("/manage/employee")
 @role_required(["Administrator", "Manager"])
 def manage_employee():
-    headers = [
+    headers = (
         "ID",
         "Name",
         "Phone",
@@ -83,15 +83,15 @@ def manage_employee():
         "School level",
         "Laboral experience",
         "Address",
-    ]
-    administratives_headers = headers + ["Position"]
-    drivers_headers = headers + ["Driver type", "Evaluation"]
+    )
+    administratives_headers = headers + ("Position")
+    drivers_headers = headers + ("Driver type", "Evaluation")
 
     administratives_data = Administrative.query.all()
     drivers_data = Driver.query.all()
 
     def get_data(e: Employee):
-        return [
+        return (
             e.id,
             e.name,
             e.phone,
@@ -99,7 +99,7 @@ def manage_employee():
             str(e.school_level.name).capitalize().replace("_", " "),
             f"{e.laboral_experience} years",
             e.address,
-        ]
+        )
 
     return render_template(
         "data/manage_employee.html",
@@ -120,14 +120,14 @@ def manage_employee():
 @data_bp.route("/manage/truck")
 @role_required(["Administrator", "Manager"])
 def manage_truck():
-    headers = [
+    headers = (
         "ID",
         "Weight",
         "Model",
         "Fuel type",
-    ]
-    lightweight_headers = headers + ["Max. Speed", "Max. Load"]
-    heavy_headers = headers + ["Spend/Km.", "Length", "Width", "Height"]
+    )
+    lightweight_headers = headers + ("Max. Speed", "Max. Load")
+    heavy_headers = headers + ("Spend/Km.", "Length", "Width", "Height")
 
     lightweight_data = LightweightTruck.query.all()
     heavy_data = HeavyTruck.query.all()
@@ -240,7 +240,7 @@ def manage_trip():
 
     def get_data(x: Trip):
         i = InterprovincialTrip.query.filter_by(trip_id=x.id).first()
-        return [
+        return (
             x.id,
             x.destination,
             x.date,
@@ -249,11 +249,11 @@ def manage_trip():
             bool(i),
             x.truck_id,
             i.return_date if i else "-",
-        ]
+        )
 
     return render_template(
         "data/manage_trip.html",
-        trips_headers=[
+        trips_headers=(
             "ID",
             "Destination",
             "Date",
@@ -262,7 +262,7 @@ def manage_trip():
             "Interprovincial?",
             "Truck id",
             "Return date",
-        ],
+        ),
         trips_data=list(map(get_data, trips)),
     )
 
