@@ -270,13 +270,20 @@ def generate_paysheet():
             (
                 db.session.query(
                     Employee.name,
-                    func.count(Trip.id) * func.IF(Driver.type == "A", 30, 10) + 4500,
+                    func.count(Trip.id) * 30 + 4500,
                 )
                 .join(InterprovincialTrip.trip)
                 .join(Trip.truck)
                 .join(Truck.driver)
                 .join(Driver.employee)
+                .filter(Driver.type == "A")
                 .group_by(Driver.employee_id)
+                .all()
+            ),
+            (
+                db.session.query(Employee.name, 10 * Driver.evaluation + 4500)
+                .join(Driver.employee)
+                .filter(Driver.type == "B")
                 .all()
             ),
             (db.session.query(Employee.name, 4700).join(Administrative.employee).all()),
@@ -291,3 +298,9 @@ def generate_paysheet():
     return render_template(
         "data/paysheet.html", headers=["Name", "Salary (USD)"], employees=get_data()
     )
+
+
+@data_bp.route("/statistics/trucks")
+@login_required()
+def statistics_trucks():
+    return render_template("data/statistics_trucks.html")
