@@ -1,11 +1,14 @@
-from datetime import date
+import itertools
 import re
+import itertools
 from typing import List
 
 from flask import flash, redirect, render_template, url_for
+from sqlalchemy import func, select
 
 from ..auth import login_required, role_required
 from . import data_bp
+from .. import db
 from .forms import RegisterEmployeeForm, RegisterTripForm, RegisterTruckForm
 from .models import (
     Administrative,
@@ -158,18 +161,34 @@ def manage_truck():
 @data_bp.route("/manage/trip")
 @login_required()
 def manage_trip():
-    headers = ["ID", "Destination", "Date", "Load", "Interprovincial?", "Return date"]
     trips = Trip.query.all()
 
     def get_data(x: Trip):
         i = InterprovincialTrip.query.filter_by(trip_id=x.id).first()
-        return [x.id, x.destination, x.date, x.load, bool(i), i.return_date if i else '-'] 
+        return [
+            x.id,
+            x.destination,
+            x.date,
+            x.load,
+            bool(i),
+            x.truck_id,
+            i.return_date if i else "-",
+        ]
 
     return render_template(
         "data/manage_trip.html",
-        trips_headers=headers,
-        trips_data=list(map(get_data, trips))
+        trips_headers=[
+            "ID",
+            "Destination",
+            "Date",
+            "Load",
+            "Interprovincial?",
+            "Truck id",
+            "Return date",
+        ],
+        trips_data=list(map(get_data, trips)),
     )
+
 
 @data_bp.route("/register/employee", methods=["GET", "POST"])
 @role_required(["Administrator", "Manager"])
@@ -239,3 +258,35 @@ def register_trip():
             return redirect(url_for("data.manage_trip"))
 
     return render_template("data/register_trip.html", form=form)
+
+
+@data_bp.route("/generate-paysheet")
+# @role_required(["Administrator", "Manager"])
+def generate_paysheet():
+    def get_data():
+        return itertools.chain(
+            (
+                db.session.query(
+                    Employee.name,
+                    func.count(Trip.id) * func.IF(Driver.type == "A", 30, 10) + 4500,
+                )
+                .join(InterprovincialTrip.trip)
+                .join(Trip.truck)
+                .join(Truck.driver)
+                .join(Driver.employee)
+                .group_by(Driver.employee_id)
+                .all()
+            ),
+            (db.session.query(Employee.name, 4700).join(Administrative.employee).all()),
+            (
+                db.session.query(Employee.name).filter(
+                    Employee.id.not_in(select(Driver.employee_id)),
+                    Employee.id.not_in(select(Administrative.employee_id))
+                )
+            ),
+        )
+
+    get_data()
+    return render_template(
+        "data/paysheet.html", headers=["Name", "Salary"], employees=get_data()
+    )

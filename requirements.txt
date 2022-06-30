@@ -25,4 +25,5 @@ zipp==3.8.0
 
 authlib
 pymysql
+flask-debugtoolbar
 # phonenumbers

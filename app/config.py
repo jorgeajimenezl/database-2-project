@@ -19,6 +19,7 @@ def _read_file(path):
 SERVER_NAME = os.environ.get("SERVER_NAME", "127.0.0.1:5000")
 SECRET_KEY = os.environ.get("SECRET_KEY", token_hex(30))
 ENV = os.environ.get("FLASK_ENV", Environments.PRODUCTION)
+DEBUG = ENV == "development"
 
 # Database
 SQLALCHEMY_DATABASE_URI = os.environ.get(
@@ -49,3 +50,7 @@ MAIL_DEFAULT_SENDER = os.environ.get(
     "MAIL_DEFAULT_SENDER", f"{MAIL_USERNAME}@{MAIL_SERVER}"
 )
 MAIL_DEBUG = ENV == Environments.DEVELOPMENT
+
+# Debug
+DEBUG_TB_ENABLED = DEBUG
+DEBUG_TB_INTERCEPT_REDIRECTS = False

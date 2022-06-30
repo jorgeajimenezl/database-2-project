@@ -1,6 +1,6 @@
 from flask import Flask
 
-from .extensions import db, login_manager, bcrypt, mail, migrate
+from .extensions import db, login_manager, bcrypt, mail, migrate, debug_toolbar
 from . import config
 
 
@@ -14,6 +14,7 @@ def create_app():
     bcrypt.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
+    debug_toolbar.init_app(app)
 
     from .core import core_bp
 
