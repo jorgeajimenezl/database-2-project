@@ -307,12 +307,15 @@ def generate_paysheet():
 # @login_required()
 def statistics_trucks():
     query1 = (
-        db.session.query(
-            Truck.id, func.sum(Trip.distance), func.avg(Trip.distance)
-        )
+        db.session.query(Truck.id, func.sum(Trip.distance), func.avg(Trip.distance), func.sum(Trip.load))
         .join(Trip.truck)
         .group_by(Truck.id)
+        .union(db.session.query(Truck.id, 0, 0, 0).filter(Truck.id.not_in(select(Trip.truck_id))))
         .all()
     )
 
-    return render_template("data/statistics_trucks.html")
+    return render_template(
+        "data/statistics_trucks.html",
+        headers=["Truck ID", "Total distance (Km.)", "Average distance (Km.)", "Total load (Kg.)"],
+        data=query1,
+    )
