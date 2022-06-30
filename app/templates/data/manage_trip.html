@@ -10,9 +10,13 @@
         </div>
     </div>
     <div class="mb-4">
-        <a class="btn btn-primary" href="{{ url_for('data.register_trip') }}" role="button">
+        <a class="btn btn-primary me-2" href="{{ url_for('data.register_trip') }}" role="button">
             <i class="fa-solid fa-plus"></i>
             Register Trip
+        </a>
+        <a class="btn btn-success" href="{{ url_for('data.save_trip_backup') }}" role="button">
+            <i class="fa-solid fa-plus"></i>
+            Save data backup
         </a>
     </div>
     <hr>

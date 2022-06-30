@@ -14,7 +14,7 @@ def create_app():
     bcrypt.init_app(app)
     mail.init_app(app)
     migrate.init_app(app, db)
-    debug_toolbar.init_app(app)
+    # debug_toolbar.init_app(app)
 
     from .core import core_bp
 

@@ -1,10 +1,13 @@
+import codecs
 from datetime import date, timedelta
+from io import BytesIO, StringIO
 import itertools
 import re
 import itertools
-from typing import List
+import csv
+from typing import List, TextIO
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, url_for, send_file
 from sqlalchemy import func, not_, select, not_
 
 from ..user.models import UserAccount
@@ -85,7 +88,7 @@ def manage_employee():
         "Laboral experience",
         "Address",
     )
-    administratives_headers = headers + ("Position", )
+    administratives_headers = headers + ("Position",)
     drivers_headers = headers + ("Driver type", "Evaluation")
 
     administratives_data = Administrative.query.all()
@@ -106,7 +109,7 @@ def manage_employee():
         "data/manage_employee.html",
         administratives_headers=administratives_headers,
         administratives_data=list(
-            map(lambda x: get_data(x.employee) + (x.position, ), administratives_data)
+            map(lambda x: get_data(x.employee) + (x.position,), administratives_data)
         ),
         drivers_headers=drivers_headers,
         drivers_data=list(
@@ -284,6 +287,7 @@ def generate_paysheet():
                 .join(Driver.employee)
                 .filter(Driver.type == "A")
                 .group_by(Driver.employee_id)
+                # .union(db.session.query(Employee.name, 4500).filter(Employee.id.not_in()))
                 .all()
             ),
             (
@@ -294,10 +298,12 @@ def generate_paysheet():
             ),
             (db.session.query(Employee.name, 4700).join(Administrative.employee).all()),
             (
-                db.session.query(Employee.name, 4500).filter(
+                db.session.query(Employee.name, 4500)
+                .filter(
                     Employee.id.not_in(select(Driver.employee_id)),
                     Employee.id.not_in(select(Administrative.employee_id)),
-                ).all()
+                )
+                .all()
             ),
         )
 
@@ -310,7 +316,7 @@ def generate_paysheet():
 @login_required()
 def statistics_trucks():
     range = (date.today() - timedelta(days=7), date.today())
-    sub = select(Trip.id).filter(not_(Trip.date.between(*range))).subquery()
+    sub = select(Trip.truck_id).filter(Trip.date.between(*range)).subquery()
 
     data = (
         db.session.query(
@@ -322,11 +328,7 @@ def statistics_trucks():
         .join(Trip.truck)
         .filter(Trip.date.between(*range))
         .group_by(Truck.id)
-        .union(
-            db.session.query(Truck.id, 0, 0, 0).filter(
-                Truck.id.not_in(sub)
-            )
-        )
+        .union(db.session.query(Truck.id, 0, 0, 0).filter(Truck.id.not_in(sub)))
         .all()
     )
 
@@ -354,3 +356,25 @@ def manage_user():
         headers=["ID", "Email", "Last time active", "Role"],
         data=map(get_data, users),
     )
+
+
+@data_bp.route("/backup/trip")
+@role_required("Administrator")
+def save_trip_backup():
+    file = BytesIO()
+    StreamWriter = codecs.getwriter("utf-8")
+    writer = csv.writer(StreamWriter(file))
+    for trip in Trip.query.all():
+        writer.writerow(
+            (
+                trip.id,
+                trip.date,
+                trip.load,
+                trip.distance,
+                trip.destination,
+                trip.truck_id,
+            )
+        )
+    file.seek(0)
+
+    return send_file(file, as_attachment=True, attachment_filename="backup.csv")
