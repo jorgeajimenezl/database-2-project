@@ -1,7 +1,7 @@
 {% extends 'core/layout.html' %}
 {% block content %}
 
-{% with title="Sign in to " + app_name %}
+{% with title="Sign In to " + app_name %}
 {% include 'auth/_header.html' %}
 {% endwith %}
 <div class="row justify-content-center">
@@ -24,7 +24,7 @@
                         <div class="col-6">
                             <div class="form-check">
                                 {{ form.remember_me(class='form-check-input') }}
-                                {{ form.remember_me.label(class='form-check-labe') }}
+                                {{ form.remember_me.label(class='form-check-label') }}
                             </div>
                         </div>
                         <div class="col-6 text-end">
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="row col-12 justify-content-center border-top g-0 pt-3">
-                        <button class="btn btn-primary">Login</button>
+                        <button class="btn btn-primary">Sign In</button>
                     </div>
                 </form>
             </div>
