@@ -288,5 +288,5 @@ def generate_paysheet():
 
     get_data()
     return render_template(
-        "data/paysheet.html", headers=["Name", "Salary"], employees=get_data()
+        "data/paysheet.html", headers=["Name", "Salary (USD)"], employees=get_data()
     )
