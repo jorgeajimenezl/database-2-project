@@ -217,12 +217,14 @@ def register_employee():
             )
 
             flash("Driver registration successfull!!", "success")
-        else:
+        elif form.employee_type.data == "Administrative":
             Administrative.create(
                 employee_id=e.id, position=form.administrative_position.data
             )
 
             flash("Administrative registration successfull!!", "success")
+        else:
+            flash("Employee registration successfull!!", "success")
 
         return redirect(url_for("data.manage_employee"))
     elif form.is_submitted():
@@ -279,7 +281,7 @@ def generate_paysheet():
             ),
             (db.session.query(Employee.name, 4700).join(Administrative.employee).all()),
             (
-                db.session.query(Employee.name).filter(
+                db.session.query(Employee.name, 4500).filter(
                     Employee.id.not_in(select(Driver.employee_id)),
                     Employee.id.not_in(select(Administrative.employee_id))
                 )

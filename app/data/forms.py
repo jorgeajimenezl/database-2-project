@@ -151,7 +151,7 @@ class RegisterEmployeeForm(FlaskForm):
     )
     address = StringField("Address", validators=[DataRequired()])
     employee_type = SelectField(
-        "Type", validators=[DataRequired()], choices=["Driver", "Administrative"]
+        "Type", validators=[DataRequired()], choices=["Driver", "Administrative", "Other"], default="Other"
     )
 
     # Driver fields

@@ -44,12 +44,12 @@
                     {% include 'core/components/inputs/floating_label.html' %}
                     {% endwith %}
                 </div>
-                <div class="col-12 mb-3" id="driver_type_container">
+                <div class="col-12 mb-3" id="driver_type_container" style="display: none;">
                     {% with field=form.driver_type %}
                     {% include 'core/components/inputs/floating_label.html' %}
                     {% endwith %}
                 </div>
-                <div class="col-12 mb-3" id="driver_evaluation_container">
+                <div class="col-12 mb-3" id="driver_evaluation_container" style="display: none;">
                     {% with field=form.driver_evaluation %}
                     {% include 'core/components/inputs/floating_label.html' %}
                     {% endwith %}
@@ -76,10 +76,15 @@
                 $("#driver_type_container").show();
                 $("#driver_evaluation_container").show();
                 $("#administrative_position_container").hide();
-            } else {
+            } 
+            else if (value == "Administrative") {
                 $("#driver_type_container").hide();
                 $("#driver_evaluation_container").hide();
                 $("#administrative_position_container").show();
+            } else {
+                $("#driver_type_container").hide();
+                $("#driver_evaluation_container").hide();
+                $("#administrative_position_container").hide();
             }
         };
         $("#employee_type").change(onEmployeeTypeChange);
